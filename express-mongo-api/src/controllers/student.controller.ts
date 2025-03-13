@@ -3,6 +3,21 @@ import { securityService, studentService } from "../services";
 import { StudentDocument, StudentInput } from "../models";
 
 class StudentController {
+  async delete(req: Request, res: Response) {
+    try {
+      const email: string = req.params.email;
+      const student: StudentDocument | null = await studentService.delete(
+        email
+      );
+      if (student === null) {
+        res.status(404).json(`the user ${email} don't found`);
+      }
+      res.status(200).json(student);
+    } catch (error) {
+      res.status(500).json(`the user could not be deleted ${error}`);
+    }
+  }
+
   async create(req: Request, res: Response) {
     try {
       console.log(req);

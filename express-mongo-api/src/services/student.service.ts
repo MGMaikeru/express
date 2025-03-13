@@ -31,6 +31,16 @@ class StudentService {
     }
   }
 
+  async delete(email: String) {
+    try {
+      const student = await StudentModel.findOneAndDelete({ email: email });
+      return student;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   async findByEmail(email: String) {
     try {
       const students = await StudentModel.findOne({ email: email });
