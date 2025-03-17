@@ -16,7 +16,6 @@ class StudentService {
 
   async update(email: String, student: StudentInput) {
     try {
-      delete student.password;
       const updatedStudent: StudentDocument | null =
         await StudentModel.findOneAndUpdate({ email: email }, student, {
           returnOriginal: true,

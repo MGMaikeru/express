@@ -39,6 +39,35 @@ class StudentController {
     }
   }
 
+  async login(req: Request, res: Response) {
+    try {
+      const student: StudentDocument | null = await studentService.findByEmail(
+        req.body.email
+      );
+      if (student === null) {
+        res
+          .status(400)
+          .json({ message: `student ${req.body.email} don't found.` });
+        return;
+      }
+      const isMatch: boolean = await securityService.comparePassword(
+        req.body.password,
+        student.password
+      );
+      if (!isMatch) {
+        res.status(400).json({ message: `user or password is incorrect` });
+      }
+      const token = await securityService.generateToken(
+        student.id,
+        student.email,
+        student.role
+      );
+      res.status(200).json({ message: "logged", token: token });
+    } catch (error) {
+      res.status(500).json(`the user could not be logged`);
+    }
+  }
+
   async update(req: Request, res: Response) {
     try {
       const email: string = req.params.email;
